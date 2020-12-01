@@ -2,15 +2,11 @@ package com.xyz.camel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xyz.dto.AtmLocationDto;
-import org.apache.camel.AsyncCallback;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +32,7 @@ public class MyRoute extends RouteBuilder {
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        //System.out.println("=========>" + exchange.getIn().getBody(String.class));
+
                         String responseString = exchange.getIn().getBody(String.class);
                         responseString = responseString.substring(6);
                         ObjectMapper mapper = new ObjectMapper();
@@ -45,32 +41,6 @@ public class MyRoute extends RouteBuilder {
                         exchange.getIn().setBody(atmLocationList);
                     }
                 });
-
-        /*from("direct:records")
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        RestTemplate restTemplate = new RestTemplate();
-                        String responseString = null;
-                        String rowPath = "/api/locator/atms/";
-                        try {
-                            UriComponents uriComponent = UriComponentsBuilder
-                                    .fromUriString("https://www.ing.nl")
-                                    .path(rowPath)
-                                    .buildAndExpand();
-                            responseString = restTemplate.getForObject(uriComponent.toUriString(), String.class);
-                            if(responseString != null) {
-                                responseString = responseString.substring(6);
-                                ObjectMapper mapper = new ObjectMapper();
-                                List<AtmLocationDto> atmLocationList = Arrays.asList(mapper.readValue(responseString, AtmLocationDto[].class));
-                                exchange.getIn().setBody(atmLocationList);
-                            }
-                        } catch (Exception e) {
-                            log.error("Error: ", e);
-                            exchange.getIn().setBody(responseString);
-                        }
-                    }
-                });*/
     }
 
 
