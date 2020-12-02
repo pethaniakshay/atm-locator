@@ -22,9 +22,8 @@ public class MyRoute extends RouteBuilder {
                 .component("servlet")
                 .bindingMode(RestBindingMode.json);
 
-        rest("/student").produces("application/json")
-                //.get("/custom").to("direct:records")
-                .get("/original").to("direct:original");
+        rest("/locator").produces("application/json")
+                .get("/atms").to("direct:original");
 
         from("direct:original")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
